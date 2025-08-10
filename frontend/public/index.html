@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Opening Form</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #d7f7f9, #ffffff);
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .stationery {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      opacity: 0;
+      animation: flyIn 2s ease forwards;
+    }
+
+    .pen {
+      top: 10%;
+      left: -10%;
+      background: url('https://cdn-icons-png.flaticon.com/128/270/270798.png') no-repeat center/contain;
+      animation-delay: 0.5s;
+    }
+
+    .pencil {
+      top: 20%;
+      right: -10%;
+      background: url('https://cdn-icons-png.flaticon.com/128/3135/3135715.png') no-repeat center/contain;
+      animation-delay: 1s;
+    }
+
+    .scale {
+      bottom: 10%;
+      left: -10%;
+      background: url('https://cdn-icons-png.flaticon.com/128/2807/2807395.png') no-repeat center/contain;
+      animation-delay: 1.5s;
+    }
+
+    .ruler {
+      bottom: 20%;
+      right: -10%;
+      background: url('https://cdn-icons-png.flaticon.com/128/411/411753.png') no-repeat center/contain;
+      animation-delay: 2s;
+    }
+
+    @keyframes flyIn {
+      to {
+        transform: translateX(100px) rotate(360deg);
+        opacity: 1;
+      }
+    }
+
+    .book {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scaleX(0);
+      width: 600px;
+      height: 400px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+      animation: openBook 1.5s ease-out forwards;
+    }
+
+    @keyframes openBook {
+      0% {
+        transform: translate(-50%, -50%) scaleX(0);
+      }
+      100% {
+        transform: translate(-50%, -50%) scaleX(1);
+      }
+    }
+
+    .book-page {
+      flex: 1;
+      padding: 30px;
+      background: #f3faff;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #00796b;
+      text-align: center;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004d40;
+      transform: scale(1.05);
+    }
+
+    #msg {
+      display: none;
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flying Stationery -->
+  <div class="stationery pen"></div>
+  <div class="stationery pencil"></div>
+  <div class="stationery scale"></div>
+  <div class="stationery ruler"></div>
+
+  <!-- Opening Book Form -->
+  <div class="book">
+    <div class="book-page">
+      <h2>User Registration</h2>
+      <form id="userForm">
+        <input type="text" id="firstname" placeholder="First Name" required />
+        <input type="text" id="lastname" placeholder="Last Name" required />
+        <input type="email" id="email" placeholder="Email" required />
+        <button type="submit">Submit</button>
+        <p id="msg">User Created!</p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('userForm');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        firstname: form.firstname.value,
+        lastname: form.lastname.value,
+        email: form.email.value
+      };
+
+      const res = await fetch('http://localhost:5000/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        msg.style.display = 'block';
+        form.reset();
+
+        setTimeout(() => {
+          msg.style.display = 'none';
+        }, 2000);
+      }
+    });
+  </script>
+
+</body>
+</html>
